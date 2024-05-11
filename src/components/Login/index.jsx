@@ -1,0 +1,48 @@
+import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import React from 'react';
+import Logo from '../../assets/Logo';
+import Button from '../button';
+import {scale} from 'react-native-size-matters';
+import Input from '../Input';
+import {useNavigation} from '@react-navigation/native';
+
+const Login = () => {
+  const navigation = useNavigation();
+  return (
+    <View
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#007786',
+        alignItems: 'center',
+        padding: scale(20),
+      }}>
+      <Logo />
+      <Input placeholder="enter username" />
+      <Input placeholder="enter password" />
+      <Button
+        text={'Login'}
+        bgLight={false}
+        onClick={() => navigation.navigate('Main')}
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: scale(30),
+        }}>
+        <Text style={{color: '#fff'}}>Don't you have an account. </Text>
+        <Pressable onPress={() => navigation.navigate('SignUp')}>
+          <Text style={{color: 'wheat', textDecorationLine: 'underline'}}>
+            Sign up
+          </Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+};
+
+export default Login;
+
+const styles = StyleSheet.create({});
