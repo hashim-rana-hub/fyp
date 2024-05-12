@@ -14,7 +14,7 @@ export default Button;
 
 const styles = StyleSheet.create({
   button: bgLight => ({
-    marginTop: scale(30),
+    marginTop: scale(10),
     backgroundColor: !bgLight ? '#007786' : '#fff',
     width: '80%',
     height: scale(30),
