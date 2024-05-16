@@ -99,8 +99,8 @@ const SignUp = () => {
       <View style={{width: '100%', alignItems: 'center', marginTop: scale(20)}}>
         <Button
           text={'Get Started'}
-          // onClick={() => navigation.navigate('Main')}
-          onClick={handleSubmit}
+          onClick={() => navigation.navigate('Main')}
+          // onClick={handleSubmit}
         />
       </View>
     </View>

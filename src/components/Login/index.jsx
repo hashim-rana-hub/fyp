@@ -67,8 +67,8 @@ const Login = () => {
         <Button
           text={'Generate OTP'}
           bgLight={false}
-          onClick={formik.handleSubmit}
-          // onClick={() => navigation.navigate('SignUp')}
+          // onClick={formik.handleSubmit}
+          onClick={() => navigation.navigate('SignUp')}
         />
         {/* </Form> */}
       </View>
