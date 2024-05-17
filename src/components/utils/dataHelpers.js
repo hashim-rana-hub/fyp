@@ -1,3 +1,6 @@
+export const ACCESS_TOKEN =
+  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2Mjc2MjUyLCJpYXQiOjE3MTU5NzYyNTIsImp0aSI6ImNlYmQ1OGIwYmJlZjQyMjQ4YWZiOTM2ZTViOGIyOWVjIiwidXNlcl9pZCI6MX0.xJjacyK5Pjos5sQYf_38OdY2DKwU1TFS4iqA4Y4Uq-0';
+
 export const getEmergencyNumbers = () => {
   return [
     {

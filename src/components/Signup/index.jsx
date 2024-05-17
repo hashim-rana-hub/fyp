@@ -37,6 +37,7 @@ const SignUp = () => {
             `Bearer ${response.accessToken}`,
           );
         }
+        console.log(response?.accessToken);
         navigation.navigate('Main');
       },
       onError: error => {

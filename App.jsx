@@ -13,6 +13,7 @@ import TextToSpeech from './src/components/TextToSpeech';
 import Emergency from './src/components/Emergency';
 import Lessons from './src/components/Lessons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,20 +47,18 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem('accessToken');
-        if (token) {
-          setIsAuthenticated(true);
-        }
-      } catch (error) {
-        console.error('Error checking token:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const checkToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('accessToken');
+      setIsAuthenticated(!!token); // Set isAuthenticated to true if token exists, false otherwise
+    } catch (error) {
+      console.error('Error checking token:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     checkToken();
   }, []);
 
@@ -79,6 +78,7 @@ const App = () => {
           )}
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
     </QueryClientProvider>
   );
 };

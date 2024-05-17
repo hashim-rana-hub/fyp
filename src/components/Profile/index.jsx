@@ -45,6 +45,8 @@ const Profile = () => {
       <View style={{alignItems: 'center'}}>
         <Button text={'Update'} bgLight={true} />
       </View>
+
+      <Button text={'Logout'} />
     </View>
   );
 };
