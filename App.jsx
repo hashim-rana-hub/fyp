@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -11,16 +11,15 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 import Gesture from './src/components/Gesture';
 import TextToSpeech from './src/components/TextToSpeech';
 import Emergency from './src/components/Emergency';
+import Lessons from './src/components/Lessons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const queryClient = new QueryClient();
 
 const AuthStack = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}>
+  <Stack.Navigator screenOptions={{headerShown: false}}>
     <Stack.Screen name="Login" component={Login} />
     <Stack.Screen name="SignUp" component={SignUp} />
   </Stack.Navigator>
@@ -28,8 +27,8 @@ const AuthStack = () => (
 
 const MainTabNavigator = () => (
   <Tab.Navigator>
-    <Tab.Screen name="Home" component={HomeStack} />
-    <Tab.Screen name="Lessons" component={Profile} />
+    <Tab.Screen name="HomeStack" component={HomeStack} />
+    <Tab.Screen name="Lessons" component={Lessons} />
     <Tab.Screen name="Profile" component={Profile} />
   </Tab.Navigator>
 );
@@ -43,18 +42,45 @@ const HomeStack = () => (
   </Stack.Navigator>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="Auth" component={AuthStack} />
-        <Stack.Screen name="Main" component={MainTabNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        if (token) {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error('Error checking token:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkToken();
+  }, []);
+
+  if (isLoading) {
+    // You can return a loading spinner or splash screen here
+    return null;
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          {isAuthenticated ? (
+            <Stack.Screen name="Main" component={MainTabNavigator} />
+          ) : (
+            <Stack.Screen name="Auth" component={AuthStack} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

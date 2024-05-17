@@ -15,7 +15,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = () => {
   const navigation = useNavigation();
   const postUserData = async data => {
-    console.log(data);
     try {
       const response = await axios.post(
         `${process.env.API_URL}/users/create-otp/`,
@@ -67,8 +66,8 @@ const Login = () => {
         <Button
           text={'Generate OTP'}
           bgLight={false}
-          // onClick={formik.handleSubmit}
-          onClick={() => navigation.navigate('SignUp')}
+          onClick={formik.handleSubmit}
+          // onClick={() => navigation.navigate('SignUp')}
         />
         {/* </Form> */}
       </View>

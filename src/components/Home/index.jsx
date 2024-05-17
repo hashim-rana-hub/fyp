@@ -1,11 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {scale} from 'react-native-size-matters';
 import Button from '../button';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   const navigation = useNavigation();
+  useEffect(() => {
+    AsyncStorage.getItem('accessToken');
+  }, []);
   return (
     <View
       style={{
