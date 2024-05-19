@@ -10,12 +10,12 @@ import React, {useContext} from 'react';
 import {scale} from 'react-native-size-matters';
 import {useQuery} from 'react-query';
 import axios from 'axios';
-import {AuthContext} from '../../context/AuthContext'; // Import the AuthContext
+// import {AuthContext} from '../../context/AuthContext'; // Import the AuthContext
 import {ACCESS_TOKEN} from '../utils/dataHelpers';
 import Toast from 'react-native-toast-message';
 
 export default function Gesture() {
-  const {token} = useContext(AuthContext); // Access the token from the context
+  // const {token} = useContext(AuthContext); // Access the token from the context
 
   const getGesturesData = async () => {
     try {

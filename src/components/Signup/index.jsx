@@ -41,7 +41,7 @@ const SignUp = () => {
         navigation.navigate('Main');
       },
       onError: error => {
-        console.error('Mutation error:', error);
+        console.error('Mutation error:', error.response);
       },
     });
   };

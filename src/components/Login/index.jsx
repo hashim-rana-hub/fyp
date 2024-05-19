@@ -20,11 +20,14 @@ const Login = () => {
         `${process.env.API_URL}/users/create-otp/`,
         data,
       );
+      console.log('response ========= : ', response);
       await AsyncStorage.setItem('email', data?.email);
       navigation.navigate('SignUp');
       return response.data;
     } catch (error) {
       console.log(error);
+      console.log('error ========= : ', error.response);
+
       throw new Error(error.response.data.message || 'Something went wrong');
     }
   };
