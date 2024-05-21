@@ -31,7 +31,7 @@ export default function Gesture() {
       );
       return response.data;
     } catch (error) {
-      console.error('Error fetching gestures data:', error);
+      console.error('Error fetching gestures data:', error?.response);
       throw error;
     }
   };
@@ -50,12 +50,17 @@ export default function Gesture() {
       );
       Toast.show({
         type: 'success',
-
+        text1: 'Success',
         text2: 'Sucessfully added to learnings',
       });
       console.log('Gesture added successfully:', response.data);
     } catch (error) {
-      console.error('Error adding gesture:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error?.response?.data?.gesture,
+      });
+      console.error('Error adding gesture:', error.response);
       throw error;
     }
   };
@@ -67,6 +72,7 @@ export default function Gesture() {
         alignItems: 'center',
         padding: scale(20),
         paddingBottom: scale(100),
+        flex: 1,
       }}>
       <View style={{width: '100%', alignItems: 'flex-start'}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>

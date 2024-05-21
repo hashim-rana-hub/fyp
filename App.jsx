@@ -58,7 +58,8 @@ const App = () => {
   const checkToken = async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
-      setIsAuthenticated(!!token);
+
+      setIsAuthenticated(token ? true : false);
     } catch (error) {
       console.error('Error checking token:', error);
     } finally {
@@ -78,12 +79,11 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          {!isAuthenticated ? (
-            <Stack.Screen name="Main" component={MainTabNavigator} />
-          ) : (
-            <Stack.Screen name="Auth" component={AuthStack} />
-          )}
+        <Stack.Navigator
+          screenOptions={{headerShown: false}}
+          initialRouteName={isAuthenticated ? 'Main' : 'Auth'}>
+          <Stack.Screen name="Auth" component={AuthStack} />
+          <Stack.Screen name="Main" component={MainTabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />

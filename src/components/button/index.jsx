@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
@@ -8,10 +9,14 @@ import {
 import React from 'react';
 import {scale} from 'react-native-size-matters';
 
-const Button = ({onClick, text, bgLight}) => {
+const Button = ({onClick, text, bgLight, isLoading}) => {
   return (
-    <Pressable style={styles.button} onPress={onClick}>
-      <Text style={{color: bgLight ? '#fff' : '#000'}}>{text}</Text>
+    <Pressable style={styles.button} onPress={onClick} disabled={isLoading}>
+      {!isLoading ? (
+        <Text style={{color: bgLight ? '#fff' : '#000'}}>{text}</Text>
+      ) : (
+        <ActivityIndicator size={'small'} />
+      )}
     </Pressable>
   );
 };

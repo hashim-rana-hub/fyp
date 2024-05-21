@@ -8,9 +8,11 @@ import OTPTextInput from 'react-native-otp-textinput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMutation} from 'react-query';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
   const otpInput = useRef(null);
@@ -28,19 +30,26 @@ const SignUp = () => {
       email: email,
       otp: parseInt(otpInput?.current?.state?.otpText?.join(''), 10),
     };
-
+    setIsLoading(true);
     mutate(data, {
       onSuccess: async response => {
-        if (response?.accessToken) {
+        setIsLoading(false);
+        if (response) {
           await AsyncStorage.setItem(
             'accessToken',
-            `Bearer ${response.accessToken}`,
+            `Bearer ${response.access_token}`,
           );
         }
-        console.log(response?.accessToken);
-        navigation.navigate('Main');
+        navigation.replace('Main');
       },
       onError: error => {
+        console.log(error?.response);
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: error?.response?.data?.detail,
+        });
         console.error('Mutation error:', error.response);
       },
     });
@@ -66,7 +75,11 @@ const SignUp = () => {
       <Logo />
       <OTPTextInput ref={otpInput} />
       <View style={styles.buttonContainer}>
-        <Button text="Get Started" onClick={handleSubmit} />
+        <Button
+          text="Get Started"
+          onClick={handleSubmit}
+          isLoading={isLoading}
+        />
       </View>
     </View>
   );

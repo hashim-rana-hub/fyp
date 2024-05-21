@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Logo from '../../assets/Logo';
 import Button from '../button';
 import {scale} from 'react-native-size-matters';
@@ -14,20 +14,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
   const postUserData = async data => {
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${process.env.API_URL}/users/create-otp/`,
         data,
       );
-      console.log('response ========= : ', response);
-      await AsyncStorage.setItem('email', data?.email);
-      navigation.navigate('SignUp');
-      return response.data;
+      if (response) {
+        setIsLoading(false);
+        await AsyncStorage.setItem('email', data?.email);
+        navigation.navigate('SignUp');
+        return response.data;
+      }
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
-      console.log('error ========= : ', error.response);
-
       throw new Error(error.response.data.message || 'Something went wrong');
     }
   };
@@ -67,6 +70,7 @@ const Login = () => {
           <Text style={styles.error}>{formik.errors.email}</Text>
         ) : null}
         <Button
+          isLoading={isLoading}
           text={'Generate OTP'}
           bgLight={false}
           onClick={formik.handleSubmit}
