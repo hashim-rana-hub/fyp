@@ -1,19 +1,34 @@
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Alert, Image, Pressable, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import Input from '../Input';
 import {scale} from 'react-native-size-matters';
 import Button from '../button';
 import GoBack from '../../assets/GoBack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import WebView from 'react-native-webview';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   const [currentUrl, setCurrentUrl] = useState(null);
 
   const links = [
     {title: 'Learn ASL', url: 'https://www.asldeafined.com/'},
     {title: 'Learn PSL', url: 'https://psl.org.pk/'},
   ];
-
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure to logout?', [
+      {
+        text: 'No',
+        onPress: () => {},
+      },
+      {
+        text: 'yes',
+        onPress: async () => {
+          await AsyncStorage.removeItem('accessToken');
+          navigation.replace('Auth');
+        },
+      },
+    ]);
+  };
   return (
     <View style={styles.container}>
       {currentUrl ? (
@@ -27,9 +42,6 @@ const Profile = () => {
         </View>
       ) : (
         <>
-          <Pressable style={styles.goBackButton}>
-            <GoBack />
-          </Pressable>
           <View style={styles.header}>
             <Image
               style={styles.image}
@@ -37,20 +49,38 @@ const Profile = () => {
               resizeMode="contain"
             />
           </View>
-          <Input placeholder={'Name'} bgLight={true} />
-          <Input placeholder={'Email'} bgLight={true} />
-          <Input placeholder={'Number'} bgLight={true} />
-          <View style={styles.updateButtonContainer}>
-            <Button text={'Update'} />
-          </View>
+          <Input
+            placeholder={'Name'}
+            bgLight={true}
+            readOnly={true}
+            style={styles.input}
+          />
+          <Input
+            placeholder={'Email'}
+            bgLight={true}
+            readOnly={true}
+            style={styles.input}
+          />
+
           {links?.map((link, index) => (
             <View key={index} style={styles.linkButtonContainer}>
               <Button
+                bgLight={false}
                 text={link?.title}
                 onClick={() => setCurrentUrl(link?.url)}
               />
             </View>
           ))}
+          <View style={styles.updateButtonContainer}>
+            <Button
+              bgLight={false}
+              text={'Feedback'}
+              onClick={() => navigation.navigate('Feedback')}
+            />
+          </View>
+          <View style={styles.updateButtonContainer}>
+            <Button text={'Logout'} onClick={handleLogout} bgLight={false} />
+          </View>
         </>
       )}
     </View>
@@ -88,7 +118,8 @@ const styles = StyleSheet.create({
     paddingTop: scale(40),
     borderRadius: scale(10),
     height: scale(100),
-    marginBottom: scale(70),
+    marginBottom: scale(60),
+    marginTop: scale(10),
   },
   image: {},
   updateButtonContainer: {
@@ -97,9 +128,13 @@ const styles = StyleSheet.create({
   },
   linkButtonContainer: {
     alignItems: 'center',
-    marginVertical: scale(10),
+    marginBottom: scale(10),
   },
   webView: {
     flex: 1,
+  },
+  input: {
+    backgroundColor: '#ddd',
+    borderColor: '#ccc',
   },
 });

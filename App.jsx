@@ -14,6 +14,8 @@ import Emergency from './src/components/Emergency';
 import Lessons from './src/components/Lessons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import FeedBack from './src/components/Feedback/FeedBack';
+import TextToGestuers from './src/components/Gesture/TextToGestuers';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,18 +30,25 @@ const AuthStack = () => (
 
 const MainTabNavigator = () => (
   <Tab.Navigator screenOptions={{headerShown: false}}>
-    <Tab.Screen name="HomeStack" component={HomeStack} />
+    <Tab.Screen name="Home" component={HomeStack} />
     <Tab.Screen name="Lessons" component={Lessons} />
-    <Tab.Screen name="Profile" component={Profile} />
+    <Tab.Screen name="Profile" component={ProfileStack} />
   </Tab.Navigator>
 );
 
+const ProfileStack = () => (
+  <Stack.Navigator>
+    <Tab.Screen name="userProfile" component={Profile} />
+    <Tab.Screen name="Feedback" component={FeedBack} />
+  </Stack.Navigator>
+);
 const HomeStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="Home" component={Home} />
-    <Stack.Screen name="TextToSpeech" component={TextToSpeech} />
+    <Stack.Screen name="home" component={Home} />
+    <Stack.Screen name="Text To Speech" component={TextToSpeech} />
     <Stack.Screen name="Emergency" component={Emergency} />
     <Stack.Screen name="Gesture" component={Gesture} />
+    <Stack.Screen name="Text To Gesture" component={TextToGestuers} />
   </Stack.Navigator>
 );
 

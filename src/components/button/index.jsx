@@ -9,11 +9,23 @@ import {
 import React from 'react';
 import {scale} from 'react-native-size-matters';
 
-const Button = ({onClick, text, bgLight, isLoading}) => {
+const Button = ({
+  onClick,
+  text,
+  bgLight = true,
+  isLoading,
+  style = {},
+  textStyle = {},
+}) => {
   return (
-    <Pressable style={styles.button} onPress={onClick} disabled={isLoading}>
+    <Pressable
+      style={[styles.button(bgLight), style]}
+      onPress={onClick}
+      disabled={isLoading}>
       {!isLoading ? (
-        <Text style={{color: bgLight ? '#fff' : '#000'}}>{text}</Text>
+        <Text style={[{color: !bgLight ? '#fff' : '#000'}, textStyle]}>
+          {text}
+        </Text>
       ) : (
         <ActivityIndicator size={'small'} />
       )}
