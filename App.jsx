@@ -14,6 +14,7 @@ import Emergency from './src/components/Emergency';
 import Lessons from './src/components/Lessons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import LessonDetails from './src/components/LessonDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,7 +28,7 @@ const AuthStack = () => (
 );
 
 const MainTabNavigator = () => (
-  <Tab.Navigator>
+  <Tab.Navigator screenOptions={{headerShown: false}}>
     <Tab.Screen name="HomeStack" component={HomeStack} />
     <Tab.Screen name="Lessons" component={Lessons} />
     <Tab.Screen name="Profile" component={Profile} />
@@ -35,11 +36,12 @@ const MainTabNavigator = () => (
 );
 
 const HomeStack = () => (
-  <Stack.Navigator>
+  <Stack.Navigator screenOptions={{headerShown: false}}>
     <Stack.Screen name="Home" component={Home} />
     <Stack.Screen name="TextToSpeech" component={TextToSpeech} />
     <Stack.Screen name="Emergency" component={Emergency} />
     <Stack.Screen name="Gesture" component={Gesture} />
+    <Stack.Screen name="LessonDetails" component={LessonDetails} />
   </Stack.Navigator>
 );
 
@@ -71,7 +73,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          {isAuthenticated ? (
+          {!isAuthenticated ? (
             <Stack.Screen name="Main" component={MainTabNavigator} />
           ) : (
             <Stack.Screen name="Auth" component={AuthStack} />
