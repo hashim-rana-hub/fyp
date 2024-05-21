@@ -11,15 +11,17 @@ import {scale} from 'react-native-size-matters';
 import {useQuery} from 'react-query';
 import axios from 'axios';
 // import {AuthContext} from '../../context/AuthContext'; // Import the AuthContext
-import {ACCESS_TOKEN} from '../utils/dataHelpers';
+// import {ACCESS_TOKEN} from '../utils/dataHelpers';
 import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Gesture() {
   // const {token} = useContext(AuthContext); // Access the token from the context
   const navigation = useNavigation();
 
   const getGesturesData = async () => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
     try {
       const response = await axios.get(
         `${process.env.API_URL}/gestures/list/`,
@@ -38,6 +40,7 @@ export default function Gesture() {
   const {data, error, isLoading} = useQuery(['get-gestures'], getGesturesData);
 
   const addGesture = async gestureId => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
     try {
       const response = await axios.post(
         `${process.env.API_URL}/learnings/list/`,
@@ -67,41 +70,47 @@ export default function Gesture() {
 
   return (
     <ScrollView
+      style={{flex: 1}}
       contentContainerStyle={{
         backgroundColor: '#007786',
         alignItems: 'center',
         padding: scale(20),
         paddingBottom: scale(100),
-        flex: 1,
       }}>
-      <View style={{width: '100%', alignItems: 'flex-start'}}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text>Go Back</Text>
-        </TouchableOpacity>
-      </View>
       {data?.results?.map(item => (
-        <View key={item?.id} style={{width: '100%'}}>
-          <Text style={{fontSize: scale(20), color: '#fff'}}>
-            {item?.title}
-          </Text>
+        <View
+          key={item?.id}
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            backgroundColor: '#fff',
+            marginBottom: scale(10),
+            borderRadius: scale(30),
+          }}>
           <Image
             style={{
-              width: scale(200),
+              width: '100%',
               height: scale(200),
+              resizeMode: 'contain',
             }}
             source={{uri: item?.image}}
           />
+          <Text style={{fontSize: scale(20), color: '#000'}}>
+            Gesture : {item?.title}
+          </Text>
           <TouchableOpacity
             style={{
-              width: '100%',
+              width: '50%',
               height: scale(40),
-              backgroundColor: '#ededed',
+              backgroundColor: '#007786',
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: scale(30),
+              marginTop: scale(10),
+              marginBottom: scale(20),
             }}
             onPress={() => addGesture(item?.id)}>
-            <Text>Add</Text>
+            <Text style={{color: '#fff'}}>Add</Text>
           </TouchableOpacity>
         </View>
       ))}

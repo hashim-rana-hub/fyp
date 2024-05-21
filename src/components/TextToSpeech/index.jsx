@@ -55,11 +55,11 @@ export default function TextToSpeech() {
     Tts.addEventListener('tts-cancel', handleCancel);
 
     // Clean up the listeners on unmount
-    return () => {
-      Tts.removeEventListener('tts-start', handleStart);
-      Tts.removeEventListener('tts-finish', handleFinish);
-      Tts.removeEventListener('tts-cancel', handleCancel);
-    };
+    // return () => {
+    //   Tts.removeEventListener('tts-start', handleStart);
+    //   Tts.removeEventListener('tts-finish', handleFinish);
+    //   Tts.removeEventListener('tts-cancel', handleCancel);
+    // };
   }, []);
 
   return (
