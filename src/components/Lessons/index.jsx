@@ -42,6 +42,7 @@ const Lessons = () => {
           marginHorizontal: 'auto',
           paddingHorizontal: scale(16),
           paddingVertical: scale(8),
+          borderColor: '#fff',
         }}
         onPress={() => navigation.navigate('LessonDetails')}>
         <View
@@ -58,7 +59,7 @@ const Lessons = () => {
               borderRadius: scale(100),
             }}
           />
-          <Text>Hello Peter</Text>
+          <Text style={{color: '#fff'}}>Hello Peter</Text>
         </View>
         <View style={styles.rotatedArrow}>
           <GoBack />

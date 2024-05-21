@@ -30,7 +30,7 @@ const AuthStack = () => (
 const MainTabNavigator = () => (
   <Tab.Navigator screenOptions={{headerShown: false}}>
     <Tab.Screen name="HomeStack" component={HomeStack} />
-    <Tab.Screen name="Lessons" component={Lessons} />
+    <Tab.Screen name="Lessons" component={LessonStack} />
     <Tab.Screen name="Profile" component={Profile} />
   </Tab.Navigator>
 );
@@ -41,6 +41,12 @@ const HomeStack = () => (
     <Stack.Screen name="TextToSpeech" component={TextToSpeech} />
     <Stack.Screen name="Emergency" component={Emergency} />
     <Stack.Screen name="Gesture" component={Gesture} />
+  </Stack.Navigator>
+);
+
+const LessonStack = () => (
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name="lessons" component={Lessons} />
     <Stack.Screen name="LessonDetails" component={LessonDetails} />
   </Stack.Navigator>
 );
@@ -52,7 +58,7 @@ const App = () => {
   const checkToken = async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
-      setIsAuthenticated(!!token); // Set isAuthenticated to true if token exists, false otherwise
+      setIsAuthenticated(!!token);
     } catch (error) {
       console.error('Error checking token:', error);
     } finally {

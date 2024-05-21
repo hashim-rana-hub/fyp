@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {scale} from 'react-native-size-matters';
 import {Dropdown} from 'react-native-element-dropdown';
+import GoBack from '../../assets/GoBack';
 
 const LessonDetails = () => {
   const navigation = useNavigation();
@@ -35,12 +36,21 @@ const LessonDetails = () => {
         backgroundColor: '#007786',
         width: '100%',
         height: '100%',
+        paddingTop: scale(10),
+        paddingHorizontal: scale(16),
       }}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text>Go Back</Text>
+        <GoBack />
       </TouchableOpacity>
       <View>
-        <Text>LessonName</Text>
+        <Text
+          style={{
+            marginVertical: scale(10),
+            fontSize: scale(18),
+            color: '#fff',
+          }}>
+          LessonName
+        </Text>
         <View
           style={{
             width: scale(150),
@@ -50,11 +60,16 @@ const LessonDetails = () => {
           }}>
           <Image />
         </View>
-        <Text>Local: ___</Text>
+        <Text
+          style={{
+            marginVertical: scale(10),
+            fontSize: scale(14),
+            color: '#fff',
+          }}>
+          Local: ___
+        </Text>
       </View>
-      {/* <Dropdown data={data} onSelect={handleSelect} />
-       */}
-      {renderLabel()}
+      {/* {renderLabel()} */}
       <Dropdown
         style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
         placeholderStyle={styles.placeholderStyle}
@@ -75,19 +90,11 @@ const LessonDetails = () => {
           setValue(item.value);
           setIsFocus(false);
         }}
-        // renderLeftIcon={() => (
-        //   <AntDesign
-        //     style={styles.icon}
-        //     color={isFocus ? 'blue' : 'black'}
-        //     name="Safety"
-        //     size={20}
-        //   />
-        // )}
       />
       <TouchableOpacity
         style={{
-          width: '50%',
-          height: scale(40),
+          width: '30%',
+          height: scale(30),
           backgroundColor: '#fff',
           borderRadius: scale(10),
           justifyContent: 'center',
@@ -96,6 +103,24 @@ const LessonDetails = () => {
           marginHorizontal: 'auto',
         }}>
         <Text>Update</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          width: '30%',
+          height: scale(30),
+          backgroundColor: '#fff',
+          borderRadius: scale(10),
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: scale(30),
+          marginHorizontal: 'auto',
+        }}>
+        <Text
+          style={{
+            color: 'red',
+          }}>
+          Delete
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -111,10 +136,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
     backgroundColor: '#fff',
+    marginHorizontal: scale(20),
+    width: '70%',
+    marginHorizontal: 'auto',
   },
   iconStyle: {
     width: 20,
     height: 20,
     color: '#fff',
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
   },
 });
