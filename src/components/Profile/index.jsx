@@ -1,11 +1,28 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Input from '../Input';
 import {scale} from 'react-native-size-matters';
 import Button from '../button';
 import GoBack from '../../assets/GoBack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure to logout?', [
+      {
+        text: 'No',
+        onPress: () => {},
+      },
+      {
+        text: 'yes',
+        onPress: async () => {
+          await AsyncStorage.removeItem('accessToken');
+          navigation.replace('Auth');
+        },
+      },
+    ]);
+  };
+
   return (
     <View
       style={{
@@ -43,10 +60,9 @@ const Profile = () => {
       <Input placeholder={'Email'} bgLight={true} />
       <Input placeholder={'Number'} bgLight={true} />
       <View style={{alignItems: 'center'}}>
-        <Button text={'Update'} bgLight={true} />
+        <Button text={'Update'} />
+        <Button text={'Logout'} onClick={handleLogout} />
       </View>
-
-      <Button text={'Logout'} />
     </View>
   );
 };

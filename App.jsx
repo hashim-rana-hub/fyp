@@ -27,7 +27,7 @@ const AuthStack = () => (
 );
 
 const MainTabNavigator = () => (
-  <Tab.Navigator>
+  <Tab.Navigator screenOptions={{headerShown: false}}>
     <Tab.Screen name="HomeStack" component={HomeStack} />
     <Tab.Screen name="Lessons" component={Lessons} />
     <Tab.Screen name="Profile" component={Profile} />
@@ -50,7 +50,7 @@ const App = () => {
   const checkToken = async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
-      setIsAuthenticated(!!token); // Set isAuthenticated to true if token exists, false otherwise
+      setIsAuthenticated(token ? true : false); // Set isAuthenticated to true if token exists, false otherwise
     } catch (error) {
       console.error('Error checking token:', error);
     } finally {
@@ -70,12 +70,11 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          {isAuthenticated ? (
-            <Stack.Screen name="Main" component={MainTabNavigator} />
-          ) : (
-            <Stack.Screen name="Auth" component={AuthStack} />
-          )}
+        <Stack.Navigator
+          screenOptions={{headerShown: false}}
+          initialRouteName={isAuthenticated ? 'Main' : 'Auth'}>
+          <Stack.Screen name="Auth" component={AuthStack} />
+          <Stack.Screen name="Main" component={MainTabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />
