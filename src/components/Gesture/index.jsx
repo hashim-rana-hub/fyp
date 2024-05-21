@@ -13,9 +13,11 @@ import axios from 'axios';
 // import {AuthContext} from '../../context/AuthContext'; // Import the AuthContext
 import {ACCESS_TOKEN} from '../utils/dataHelpers';
 import Toast from 'react-native-toast-message';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Gesture() {
   // const {token} = useContext(AuthContext); // Access the token from the context
+  const navigation = useNavigation();
 
   const getGesturesData = async () => {
     try {
@@ -72,6 +74,11 @@ export default function Gesture() {
         paddingBottom: scale(100),
         flex: 1,
       }}>
+      <View style={{width: '100%', alignItems: 'flex-start'}}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text>Go Back</Text>
+        </TouchableOpacity>
+      </View>
       {data?.results?.map(item => (
         <View key={item?.id} style={{width: '100%'}}>
           <Text style={{fontSize: scale(20), color: '#fff'}}>
