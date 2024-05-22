@@ -17,7 +17,8 @@ import Toast from 'react-native-toast-message';
 import LessonDetails from './src/components/LessonDetails';
 import FeedBack from './src/components/Feedback/FeedBack';
 import TextToGestuers from './src/components/Gesture/TextToGestuers';
-
+import Feather from 'react-native-vector-icons/Feather';
+import Support from './src/components/Support/Support';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const queryClient = new QueryClient();
@@ -30,16 +31,40 @@ const AuthStack = () => (
 );
 
 const MainTabNavigator = () => (
-  <Tab.Navigator screenOptions={{headerShown: false}}>
+  <Tab.Navigator
+    screenOptions={({route}) => ({
+      headerShown:
+        route.name === 'Support' || route.name === 'Lessons' ? true : false,
+      tabBarHideOnKeyboard: true,
+      tabBarIcon: ({focused, color, size}) => {
+        let iconName;
+
+        if (route.name === 'Home') {
+          iconName = focused ? 'home' : 'home';
+        } else if (route.name === 'Lessons') {
+          iconName = focused ? 'book-open' : 'book-open';
+        } else if (route.name === 'profile') {
+          iconName = focused ? 'user' : 'user';
+        } else if (route.name === 'Support') {
+          iconName = focused ? 'message-circle' : 'message-circle';
+        }
+
+        // You can return any component that you like here!
+        return <Feather name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: '#007786',
+      tabBarInactiveTintColor: 'gray',
+    })}>
     <Tab.Screen name="Home" component={HomeStack} />
-    <Tab.Screen name="Lessons" component={LessonStack} />
-    <Tab.Screen name="Profile" component={ProfileStack} />
+    <Tab.Screen name="Lessons" component={Lessons} />
+    <Tab.Screen name="Support" component={Support} />
+    <Tab.Screen name="profile" component={ProfileStack} />
   </Tab.Navigator>
 );
 
 const ProfileStack = () => (
   <Stack.Navigator>
-    <Tab.Screen name="userProfile" component={Profile} />
+    <Tab.Screen name="Profile" component={Profile} />
     <Tab.Screen name="Feedback" component={FeedBack} />
   </Stack.Navigator>
 );
