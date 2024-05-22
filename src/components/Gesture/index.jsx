@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -68,25 +69,12 @@ export default function Gesture() {
     }
   };
 
-  return (
+  return data ? (
     <ScrollView
-      style={{flex: 1}}
-      contentContainerStyle={{
-        backgroundColor: '#007786',
-        alignItems: 'center',
-        padding: scale(20),
-        paddingBottom: scale(100),
-      }}>
+      style={{flex: 1, backgroundColor: '#007786'}}
+      contentContainerStyle={styles.scrollViewStyle}>
       {data?.results?.map(item => (
-        <View
-          key={item?.id}
-          style={{
-            width: '100%',
-            alignItems: 'center',
-            backgroundColor: '#fff',
-            marginBottom: scale(10),
-            borderRadius: scale(30),
-          }}>
+        <View key={item?.id} style={styles.container}>
           <Image
             style={{
               width: '100%',
@@ -99,23 +87,48 @@ export default function Gesture() {
             Gesture : {item?.title}
           </Text>
           <TouchableOpacity
-            style={{
-              width: '50%',
-              height: scale(40),
-              backgroundColor: '#007786',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: scale(30),
-              marginTop: scale(10),
-              marginBottom: scale(20),
-            }}
+            style={styles.btnStyle}
             onPress={() => addGesture(item?.id)}>
             <Text style={{color: '#fff'}}>Add</Text>
           </TouchableOpacity>
         </View>
       ))}
     </ScrollView>
+  ) : (
+    <View style={styles.loaderViw}>
+      <ActivityIndicator size={'large'} color={'#fff'} />
+    </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  scrollViewStyle: {
+    backgroundColor: '#007786',
+    alignItems: 'center',
+    padding: scale(20),
+    paddingBottom: scale(100),
+  },
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginBottom: scale(10),
+    borderRadius: scale(30),
+  },
+  btnStyle: {
+    width: '50%',
+    height: scale(40),
+    backgroundColor: '#007786',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: scale(30),
+    marginTop: scale(10),
+    marginBottom: scale(20),
+  },
+  loaderViw: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#007786',
+  },
+});
