@@ -1,10 +1,16 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Tts from 'react-native-tts';
 import Button from '../button';
 import {scale} from 'react-native-size-matters';
+import Input from '../Input';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 export default function TextToSpeech() {
+  const [inputValue, setInputValue] = useState('');
+  const [isAudioGenerated, setIsAudioGenerated] = useState(false);
+  const [generatedAudio, setGeneratedAudio] = useState(null);
   const textArray = [
     {id: '1', text: 'Hello, this is the first text to speech example.'},
     {id: '2', text: 'Here is the second piece of text to read aloud.'},
@@ -30,6 +36,59 @@ export default function TextToSpeech() {
     Tts.stop();
     Tts.speak(text);
   };
+
+  const handleGenerateAudioClick = async () => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await axios.post(
+        `${process.env.API_URL}/gestures/audio/generate/`,
+        {
+          text: inputValue,
+        },
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('Audio generated successfully:', response);
+      setInputValue('');
+      // setIsAudioGenerated(pre => !pre);
+      if (response?.status === 201) handleGetGeneratedAudio();
+      // Handle successful response
+    } catch (error) {
+      console.error('Error generating audio:', error);
+      // Handle error
+    }
+  };
+
+  const handleGetGeneratedAudio = async () => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await axios.get(
+        `${process.env.API_URL}/gestures/audio/generate/`,
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('Audio generated successfully n   r4esults:', response?.data);
+      if (response) setGeneratedAudio(response?.data?.results);
+      // Handle successful response
+    } catch (error) {
+      console.error('Error generating audio:', error);
+      // Handle error
+    }
+  };
+
+  console.log('------- ', generatedAudio);
+
+  // useEffect(() => {
+  //   handleGetGeneratedAudio();
+  // }, [isAudioGenerated]);
 
   useEffect(() => {
     // Initialize TTS and set default options
@@ -66,18 +125,39 @@ export default function TextToSpeech() {
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#007786',
+        paddingTop: scale(20),
+        paddingHorizontal: scale(16),
       }}>
+      <Input
+        placeholder="Enter Your Text Here"
+        value={inputValue}
+        onChange={val => setInputValue(val)}
+      />
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#fff',
+          width: scale(150),
+          height: scale(25),
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: scale(8),
+          marginBottom: scale(20),
+        }}
+        onPress={handleGenerateAudioClick}>
+        <Text style={{color: '#000'}}>Generate Audio</Text>
+      </TouchableOpacity>
+      {/* {isAudioGenerated ? ( */}
       <FlatList
         showsVerticalScrollIndicator={false}
+        style={{width: '100%'}}
         contentContainerStyle={{
-          // alignItems: 'center',
           padding: scale(10),
           paddingBottom: scale(100),
         }}
-        data={textArray}
+        data={generatedAudio}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View
@@ -92,7 +172,8 @@ export default function TextToSpeech() {
               paddingHorizontal: scale(20),
             }}>
             <Text style={{color: '#fff', textAlign: 'justify'}}>
-              {item.text}
+              {item?.text}
+              {console.log(item)}
             </Text>
             <TouchableOpacity
               style={{
