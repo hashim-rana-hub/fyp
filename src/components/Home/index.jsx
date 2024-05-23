@@ -21,26 +21,7 @@ const Home = () => {
         alignItems: 'center',
         padding: scale(20),
       }}>
-      <View
-        style={{
-          position: 'relative',
-        }}>
-        <View
-          style={{
-            position: 'absolute',
-            width: '65%',
-            height: '90%',
-            padding: scale(5),
-            borderWidth: 1,
-            borderColor: '#fff',
-            borderRadius: scale(100),
-            zIndex: 1,
-            right: scale(48),
-            top: scale(12),
-          }}
-        />
-        <Logo />
-      </View>
+      <Logo />
       <View style={{width: '100%', alignItems: 'center', gap: scale(15)}}>
         <Button
           text={'Gestures'}
