@@ -67,7 +67,6 @@ export default function Gesture() {
         text1: 'Success',
         text2: 'Sucessfully added to learnings',
       });
-      console.log('Gesture added successfully:', response.data);
     } catch (error) {
       Toast.show({
         type: 'error',

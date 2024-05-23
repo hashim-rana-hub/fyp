@@ -27,7 +27,6 @@ const LessonDetails = () => {
           },
         },
       );
-      // console.log('r---------- ', response?.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching gestures data:', error?.response);

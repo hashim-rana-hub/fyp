@@ -37,7 +37,6 @@ const Lessons = () => {
       queryKey: ['get-lessons'],
       queryFn: ({pageParam = 1}) => getLessonsList(pageParam),
       getNextPageParam: getNextPage,
-      onError: error => console.log(error?.response),
       staleTime: 0,
       cacheTime: 0,
     });
