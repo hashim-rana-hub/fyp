@@ -6,6 +6,8 @@ import Button from '../button';
 import GoBack from '../../assets/GoBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WebView from 'react-native-webview';
+import {useQuery} from 'react-query';
+import axios from 'axios';
 
 const Profile = ({navigation}) => {
   const [currentUrl, setCurrentUrl] = useState(null);
@@ -29,6 +31,24 @@ const Profile = ({navigation}) => {
       },
     ]);
   };
+
+  const getProfileData = async () => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await axios.get(
+        `${process.env.API_URL}/users/profile/`,
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      );
+
+      return response?.data;
+    } catch (error) {}
+  };
+  const {data, isLoading} = useQuery('profile', getProfileData);
+
   return (
     <View style={styles.container}>
       {currentUrl ? (
@@ -50,16 +70,18 @@ const Profile = ({navigation}) => {
             />
           </View>
           <Input
-            placeholder={'Name'}
+            // placeholder={'Name'}
             bgLight={true}
             readOnly={true}
             style={styles.input}
+            value={data?.full_name}
           />
           <Input
-            placeholder={'Email'}
+            placeholder={data?.email}
             bgLight={true}
             readOnly={true}
             style={styles.input}
+            value={data?.email}
           />
 
           {links?.map((link, index) => (
