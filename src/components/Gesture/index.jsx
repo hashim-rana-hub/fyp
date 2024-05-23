@@ -25,7 +25,6 @@ export default function Gesture() {
   const [apiData, setApiData] = useState([]);
 
   const getGesturesData = async params => {
-    console.log('params ======= : ', params);
     const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
     return await axios.get(
       `${process.env.API_URL}/gestures/list/?page=${params.page}`,
@@ -84,8 +83,6 @@ export default function Gesture() {
     setApiData(newData);
   }, [data]);
 
-  console.log('has ======= : ', hasNextPage);
-  // console.log('apiData ======= : ', apiData);
   return !!apiData?.length ? (
     <FlatList
       style={{flex: 1, backgroundColor: '#007786'}}

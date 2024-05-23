@@ -6,49 +6,43 @@ import {
   Image,
   StyleSheet,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {scale} from 'react-native-size-matters';
 import GoBack from '../../assets/GoBack';
 import {useNavigation} from '@react-navigation/native';
 import {useInfiniteQuery, useQuery} from 'react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import {getNextPage} from '../../Constants/constants';
 
 const Lessons = () => {
   const navigation = useNavigation();
-
-  const getLessonsList = async ({pageParam = 1}) => {
+  const [lessons, setLessons] = useState([]);
+  const getLessonsList = async pageParam => {
     const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
-    try {
-      const response = await axios.get(
-        `${process.env.API_URL}/learnings/list/?page=${pageParam}`,
-        {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
+
+    return await axios.get(
+      `${process.env.API_URL}/learnings/list/?page=${pageParam}`,
+      {
+        headers: {
+          Authorization: ACCESS_TOKEN,
         },
-      );
-      return {
-        data: response.data,
-        nextPage: pageParam + 1,
-        isLast: !response.data.length,
-      };
-    } catch (error) {
-      console.error('Error fetching gestures data:', error?.response);
-      throw error;
-    }
+      },
+    );
   };
   const {data, fetchNextPage, isFetchingNextPage, hasNextPage} =
-    useInfiniteQuery('get-lessons', getLessonsList, {
-      getNextPageParam: lastPage => {
-        // console.log('first======= ', lastPage);
-        if (lastPage.isLast) return undefined;
-        return lastPage.nextPage;
-      },
+    useInfiniteQuery({
+      queryKey: ['get-lessons'],
+      queryFn: ({pageParam = 1}) => getLessonsList(pageParam),
+      getNextPageParam: getNextPage,
+      onError: error => console.log(error?.response),
+      staleTime: 0,
+      cacheTime: 0,
     });
+
   const renderItem = ({item}) => {
-    console.log('item-------- ', item);
     return (
       <TouchableOpacity
         style={{
@@ -88,8 +82,11 @@ const Lessons = () => {
       </TouchableOpacity>
     );
   };
-  const flattenData = data?.pages?.flatMap(page => page.data) || [];
-  console.log('=========== ', flattenData[0]?.results);
+  useEffect(() => {
+    const flattenData = data?.pages?.flatMap(page => page.data?.results);
+    setLessons(flattenData);
+  }, [data]);
+
   return (
     <View
       style={{
@@ -108,7 +105,7 @@ const Lessons = () => {
         Master the Art of Learning
       </Text>
       <FlatList
-        data={flattenData?.[0]?.results}
+        data={lessons}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={{alignItems: 'center'}}
@@ -119,7 +116,7 @@ const Lessons = () => {
         }}
         onEndReachedThreshold={0.5}
         ListFooterComponent={() =>
-          isFetchingNextPage ? <ActivityIndicator /> : null
+          isFetchingNextPage ? <ActivityIndicator size={'small'} /> : null
         }
       />
       {/* <TouchableOpacity

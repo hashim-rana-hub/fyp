@@ -12,6 +12,7 @@ const LessonDetails = () => {
   const navigation = useNavigation();
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [dropdownData, setDropdownData] = useState([]);
   const route = useRoute();
   const {id} = route.params;
 
@@ -61,9 +62,13 @@ const LessonDetails = () => {
     getLanguages,
   );
 
-  useEffect(() => {
-    console.log(details);
-  }, []);
+  // useEffect(() => {
+  //   const lang = language?.results?.map(item => ({
+  //     label: item?.name,
+  //     value: item?.id,
+  //   }));
+  //   setDropdownData(lang);
+  // }, [language]);
 
   const data = [
     {label: 'Item 1', value: '1'},
@@ -84,11 +89,6 @@ const LessonDetails = () => {
   const handleSelect = item => {
     console.log('Selected item:', item);
   };
-
-  const lang = language?.results?.map(item => ({
-    label: item?.name,
-    value: item?.id,
-  }));
 
   return (
     <View
@@ -148,7 +148,7 @@ const LessonDetails = () => {
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
         const
-        data={data}
+        data={dropdownData}
         search
         maxHeight={300}
         labelField="label"
