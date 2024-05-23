@@ -1,14 +1,69 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {scale} from 'react-native-size-matters';
 import {Dropdown} from 'react-native-element-dropdown';
 import GoBack from '../../assets/GoBack';
+import {useQuery} from 'react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const LessonDetails = () => {
   const navigation = useNavigation();
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const route = useRoute();
+  const {id} = route.params;
+
+  const getLessonDetails = async () => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await axios.get(
+        `${process.env.API_URL}/learnings/${id}/`,
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      );
+      // console.log('r---------- ', response?.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching gestures data:', error?.response);
+      throw error;
+    }
+  };
+  const getLanguages = async () => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await axios.get(
+        `${process.env.API_URL}/core/languages/`,
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching gestures data:', error?.response);
+      throw error;
+    }
+  };
+
+  const {data: details, isLoading} = useQuery(
+    ['get-lessons-details'],
+    getLessonDetails,
+  );
+
+  const {data: language, isLoading: languageLoader} = useQuery(
+    ['get-languages'],
+    getLanguages,
+  );
+
+  useEffect(() => {
+    console.log(details);
+  }, []);
 
   const data = [
     {label: 'Item 1', value: '1'},
@@ -30,6 +85,11 @@ const LessonDetails = () => {
     console.log('Selected item:', item);
   };
 
+  const lang = language?.results?.map(item => ({
+    label: item?.name,
+    value: item?.id,
+  }));
+
   return (
     <View
       style={{
@@ -49,16 +109,27 @@ const LessonDetails = () => {
             fontSize: scale(18),
             color: '#fff',
           }}>
-          LessonName
+          {details?.gesture_details?.title}
         </Text>
         <View
           style={{
-            width: scale(150),
-            height: scale(150),
+            width: scale(160),
+            height: scale(160),
             backgroundColor: '#fff',
             marginHorizontal: 'auto',
+            borderRadius: scale(100),
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
-          <Image />
+          <Image
+            style={{
+              width: '90%',
+              height: '90%',
+              borderRadius: scale(100),
+            }}
+            source={{uri: details?.gesture_details?.image}}
+            resizeMode="contain"
+          />
         </View>
         <Text
           style={{
@@ -66,7 +137,7 @@ const LessonDetails = () => {
             fontSize: scale(14),
             color: '#fff',
           }}>
-          Local: ___
+          Local: {details?.local_translation}
         </Text>
       </View>
       {/* {renderLabel()} */}
@@ -76,6 +147,7 @@ const LessonDetails = () => {
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
+        const
         data={data}
         search
         maxHeight={300}

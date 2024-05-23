@@ -56,7 +56,7 @@ const MainTabNavigator = () => (
       tabBarInactiveTintColor: 'gray',
     })}>
     <Tab.Screen name="Home" component={HomeStack} />
-    <Tab.Screen name="Lessons" component={Lessons} />
+    <Tab.Screen name="Lessons" component={LessonStack} />
     <Tab.Screen name="Support" component={Support} />
     <Tab.Screen name="profile" component={ProfileStack} />
   </Tab.Navigator>
@@ -92,7 +92,7 @@ const App = () => {
   const checkToken = async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
-
+      console.log(token);
       setIsAuthenticated(token ? true : false);
     } catch (error) {
       console.error('Error checking token:', error);
