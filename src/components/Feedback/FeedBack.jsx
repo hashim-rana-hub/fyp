@@ -15,6 +15,7 @@ import Logo from '../../assets/Logo';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const FeedBack = () => {
   const [name, setName] = useState('');
@@ -66,12 +67,16 @@ const FeedBack = () => {
           },
         },
       );
+      if (response?.status == 201) {
+        setName('');
+        setEmail('');
+        setComments('');
+      }
       Toast.show({
         type: 'success',
         text1: 'Success',
-        text2: 'Sucessfully added to learnings',
+        text2: 'Sucessfully submitted feedback',
       });
-      console.log('Gesture added successfully:', response.data);
     } catch (error) {
       Toast.show({
         type: 'error',
