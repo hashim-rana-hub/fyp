@@ -12,7 +12,6 @@ const Input = ({
   style = {},
   multiline = false,
 }) => {
-  console.log(value);
   return (
     <>
       <TextInput

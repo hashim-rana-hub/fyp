@@ -70,7 +70,6 @@ const Profile = ({navigation}) => {
             />
           </View>
           <Input
-            // placeholder={'Name'}
             bgLight={true}
             readOnly={true}
             style={styles.input}
