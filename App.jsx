@@ -92,7 +92,6 @@ const App = () => {
   const checkToken = async () => {
     try {
       const token = await AsyncStorage.getItem('accessToken');
-      console.log(token);
       setIsAuthenticated(token ? true : false);
     } catch (error) {
       console.error('Error checking token:', error);

@@ -25,7 +25,6 @@ export default function Gesture() {
   const [apiData, setApiData] = useState([]);
 
   const getGesturesData = async params => {
-    console.log('params ======= : ', params);
     const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
     return await axios.get(
       `${process.env.API_URL}/gestures/list/?page=${params.page}`,
@@ -68,7 +67,6 @@ export default function Gesture() {
         text1: 'Success',
         text2: 'Sucessfully added to learnings',
       });
-      console.log('Gesture added successfully:', response.data);
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -84,8 +82,6 @@ export default function Gesture() {
     setApiData(newData);
   }, [data]);
 
-  console.log('has ======= : ', hasNextPage);
-  // console.log('apiData ======= : ', apiData);
   return !!apiData?.length ? (
     <FlatList
       style={{flex: 1, backgroundColor: '#007786'}}

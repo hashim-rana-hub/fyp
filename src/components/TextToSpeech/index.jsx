@@ -84,8 +84,6 @@ export default function TextToSpeech() {
     }
   };
 
-  console.log('------- ', generatedAudio);
-
   // useEffect(() => {
   //   handleGetGeneratedAudio();
   // }, [isAudioGenerated]);
@@ -173,7 +171,6 @@ export default function TextToSpeech() {
             }}>
             <Text style={{color: '#fff', textAlign: 'justify'}}>
               {item?.text}
-              {console.log(item)}
             </Text>
             <TouchableOpacity
               style={{
