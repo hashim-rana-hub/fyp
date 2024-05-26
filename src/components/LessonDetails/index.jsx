@@ -154,7 +154,7 @@ const LessonDetails = () => {
             fontSize: scale(14),
             color: '#fff',
           }}>
-          Local: {details?.local_translation}
+          Local: {details?.local_translation ?? 'Translation is unavailable'}
         </Text>
       </View>
       <Dropdown

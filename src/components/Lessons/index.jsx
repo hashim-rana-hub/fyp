@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   Image,
   StyleSheet,
@@ -12,7 +11,7 @@ import React, {useEffect, useState} from 'react';
 import {scale} from 'react-native-size-matters';
 import GoBack from '../../assets/GoBack';
 import {useNavigation} from '@react-navigation/native';
-import {useInfiniteQuery, useQuery} from 'react-query';
+import {useInfiniteQuery} from 'react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {getNextPage} from '../../Constants/constants';
@@ -118,40 +117,6 @@ const Lessons = () => {
           isFetchingNextPage ? <ActivityIndicator size={'small'} /> : null
         }
       />
-      {/* <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          width: '90%',
-          borderWidth: scale(1),
-          borderRadius: scale(8),
-          justifyContent: 'space-between',
-          marginHorizontal: 'auto',
-          paddingHorizontal: scale(16),
-          paddingVertical: scale(8),
-          borderColor: '#fff',
-        }}
-        onPress={() => navigation.navigate('LessonDetails')}>
-        <View
-          style={{
-            gap: scale(16),
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{
-              width: scale(40),
-              height: scale(40),
-              backgroundColor: '#fff',
-              borderRadius: scale(100),
-            }}
-          />
-          <Text style={{color: '#fff'}}>Hello Peter</Text>
-        </View>
-        <View style={styles.rotatedArrow}>
-          <GoBack />
-        </View>
-      </TouchableOpacity> */}
     </View>
   );
 };
