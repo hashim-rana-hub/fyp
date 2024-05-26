@@ -1,10 +1,10 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {scale} from 'react-native-size-matters';
 import {Dropdown} from 'react-native-element-dropdown';
 import GoBack from '../../assets/GoBack';
-import {useQuery} from 'react-query';
+import {useMutation, useQuery} from 'react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -12,7 +12,6 @@ const LessonDetails = () => {
   const navigation = useNavigation();
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
-  const [dropdownData, setDropdownData] = useState([]);
   const route = useRoute();
   const {id} = route.params;
 
@@ -27,6 +26,7 @@ const LessonDetails = () => {
           },
         },
       );
+      console.log('details are ==== ', response);
       return response.data;
     } catch (error) {
       console.error('Error fetching gestures data:', error?.response);
@@ -61,33 +61,51 @@ const LessonDetails = () => {
     getLanguages,
   );
 
-  // useEffect(() => {
-  //   const lang = language?.results?.map(item => ({
-  //     label: item?.name,
-  //     value: item?.id,
-  //   }));
-  //   setDropdownData(lang);
-  // }, [language]);
-
-  const data = [
-    {label: 'Item 1', value: '1'},
-    {label: 'Item 2', value: '2'},
-    {label: 'Item 3', value: '3'},
-  ];
-  const renderLabel = () => {
-    if (value || isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && {color: 'blue'}]}>
-          Dropdown label
-        </Text>
+  const performLocalTranslation = async langId => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await axios.patch(
+        `${process.env.API_URL}/learnings/${langId}`,
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
       );
+      getLessonDetails();
+      console.log('respoonse ===== ', response);
+      return response.data;
+    } catch (error) {
+      console.log('error from upate api ', error);
     }
-    return null;
   };
 
-  const handleSelect = item => {
-    console.log('Selected item:', item);
+  const performDeleteLocalTranslation = async langId => {
+    const ACCESS_TOKEN = await AsyncStorage.getItem('accessToken');
+    try {
+      const response = await axios.delete(
+        `${process.env.API_URL}/learnings/${langId}`,
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      );
+      getLessonDetails();
+      console.log('respoonse ===== ', response);
+      return response.data;
+    } catch (error) {
+      console.log('error from upate api ', error);
+    }
   };
+
+  const lang = language?.results?.map(item => ({
+    label: item?.name,
+    value: item?.id,
+  }));
+
+  const performPatchReq = useMutation(performLocalTranslation);
+  const performDeleteReq = useMutation(performDeleteLocalTranslation);
 
   return (
     <View
@@ -139,21 +157,17 @@ const LessonDetails = () => {
           Local: {details?.local_translation}
         </Text>
       </View>
-      {/* {renderLabel()} */}
       <Dropdown
         style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        const
-        data={dropdownData}
-        search
+        data={lang || []}
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? 'Select item' : '...'}
-        searchPlaceholder="Search..."
+        placeholder="Select language"
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
@@ -172,7 +186,8 @@ const LessonDetails = () => {
           alignItems: 'center',
           marginTop: scale(30),
           marginHorizontal: 'auto',
-        }}>
+        }}
+        onPress={() => performPatchReq.mutate(value)}>
         <Text>Update</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -185,7 +200,8 @@ const LessonDetails = () => {
           alignItems: 'center',
           marginTop: scale(30),
           marginHorizontal: 'auto',
-        }}>
+        }}
+        onPress={() => performDeleteReq.mutate(value)}>
         <Text
           style={{
             color: 'red',
